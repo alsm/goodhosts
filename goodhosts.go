@@ -191,8 +191,7 @@ func (h *Hosts) Remove(ip string, hosts ...string) error {
 }
 
 func (h Hosts) getHostPosition(ip string, host string) int {
-	for i := range h.Lines {
-		line := h.Lines[i]
+	for i, line := range h.Lines {
 		if !line.IsComment() && line.Raw != "" {
 			if ip == line.IP && itemInSlice(host, line.Hosts) {
 				return i
@@ -204,8 +203,7 @@ func (h Hosts) getHostPosition(ip string, host string) int {
 }
 
 func (h Hosts) getIpPosition(ip string) int {
-	for i := range h.Lines {
-		line := h.Lines[i]
+	for i, line := range h.Lines {
 		if !line.IsComment() && line.Raw != "" {
 			if line.IP == ip {
 				return i
@@ -214,6 +212,20 @@ func (h Hosts) getIpPosition(ip string) int {
 	}
 
 	return -1
+}
+
+//Lookup returns the string of the IP linked to the host name
+//in "host" or an empty string if no match found.
+func (h Hosts) Lookup(host string) string {
+	for _, line := range h.Lines {
+		if !line.IsComment() && line.Raw != "" {
+			if itemInSlice(host, line.Hosts) {
+				return line.IP
+			}
+		}
+	}
+
+	return ""
 }
 
 // Return a new instance of ``Hosts``.

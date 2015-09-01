@@ -38,6 +38,20 @@ func TestHostsHas(t *testing.T) {
 	}
 }
 
+func TestLookup(t *testing.T) {
+	hosts := new(Hosts)
+	hosts.Lines = []HostsLine{
+		NewHostsLine("127.0.0.1 yadda"), NewHostsLine("10.0.0.7 nada")}
+
+	if hosts.Lookup("yadda") != "127.0.0.1" {
+		t.Errorf("Expected 127.0.0.1, found %s", hosts.Lookup("yadda"))
+	}
+
+	if hosts.Lookup("nada") != "10.0.0.7" {
+		t.Errorf("Expected 10.0.0.7, found %s", hosts.Lookup("nada"))
+	}
+}
+
 func TestHostsHasDoesntFindMissingEntry(t *testing.T) {
 	hosts := new(Hosts)
 	hosts.Lines = []HostsLine{
